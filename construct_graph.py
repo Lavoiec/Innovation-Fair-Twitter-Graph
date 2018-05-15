@@ -83,21 +83,43 @@ class TwitterGraph():
             node_list.append(node['id'])
 
         self.node_list = node_list
+        users = []
+        for tweet in tweet_list:
 
+            user = tweet['user']
+            user_object = {
+                'name': user['name'],
+                'id': user['id'],
+                'description': user['description']
+            } 
+            if user not in users:
+                users.append(user)
+            
+        self.users = users
+        users_list = []
+        for user in self.users:
+            if user not in users_list:
+                users_list.append(user) 
 
-    def get_links(self, method):
+        self.users_list = users_list
+    def get_links(self, method, nodes):
 
         """
         method: Either "reply" or "retweet". Determines how the tweets will link with each other.
         """
-        
+        if nodes == "tweets":
+            node_list = self.node_list
+        elif nodes == "users":
+            node_list = self.users_list
+
+
         tweet_list = self.data
         link_data = []
         for tweet in tweet_list:
             
             def create_link_object(link_on):
 
-                if link_on in self.node_list:
+                if link_on in node_list:
                     link_object = {
                         'source': tweet['id'],
                         'target': link_on,
@@ -126,13 +148,14 @@ class TwitterGraph():
                     if link_object:
                         link_data.append(link_object)
 
+
                 elif method == "both":
 
                     link_object = create_link_object(tweet['retweeted_status']['id'])
                     if link_object:
                         link_data.append(link_object)
 
-                    link_object = create_link_object(tweet['in_reply_to_status_id'] )
+                    link_object = create_link_object(tweet['in_reply_to_status_id'])
                     if link_object:
                         link_data.append(link_object)
 
@@ -143,16 +166,25 @@ class TwitterGraph():
         self.links = link_data
 
     
-    def export_to_json(self):
+
+    def get_user_links():
+        pass
+
+
+
+    def export_to_json(self, nodes):
         """
         Exports the nodes and links parameters as a JSON object to mirror the
         "miserables.json" dataset used in the example.
         """
+        json_object = {}
+        json_object["links"] = self.links
 
-        json_object = {
-            "nodes": self.nodes,
-            "links": self.links
-        }
+        if nodes == "tweets":
+            json_object["nodes"] = self.nodes
+        elif nodes == "users":
+            json_object["nodes"] = self.users
+
 
         with open('twitter_graph.json', 'w') as f:
             json.dump(json_object, f, indent=4, separators=(',',':'))
@@ -162,6 +194,6 @@ class TwitterGraph():
 tweets = import_tweets()
 graph = TwitterGraph(tweets)
 graph.get_nodes()
-graph.get_links(method="both")
-graph.export_to_json()
+graph.get_links(method="both", nodes="tweets")
+graph.export_to_json(nodes="tweets")
 
