@@ -33,10 +33,10 @@ d3.json("twitter_graph.json", function(error, graph) {
         div.transition()
            .duration(200)
            .style("opacity", 0.9)
-           .style("left", (d3.event.pageX - 5) + "px")     
+           .style("left", (d3.event.pageX - 5) + "px")
            .style("top", (d3.event.pageY - 80) + "px");
 
-        div.html("<b>Author:</b> " + d.author +  "</br>" + "<b>Text:</b> " + d.text);
+        div.html("<b>Author:</b> " + d.author +  "</br>" + "<b>Text:</b> " + d.text +  "</br> <b>Time Created</b>: " + d.time_created);
         // Current node gets bigger when moused-over
         d3.select(this).attr("r", function(d) {return 1.5*(Math.sqrt(d.size) + 8);});
      })

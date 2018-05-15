@@ -15,8 +15,24 @@
     border-width: 1px;
     border-radius: 6px;
     padding: 2px;
+    z-index: 1;
   }
   
   .svg {
     position: absolute;
   }
+
+.title {
+      background-color: transparent;
+      font-family: 'Rubik', sans-serif;
+      font-size: 2.25em;
+      position: fixed;
+      color: #252525;
+      top: 0px;
+      left: 0px;
+      padding: 0px;
+      margin-top: 5px;
+  }
+body {
+    background-color: #FAFAFA 
+}

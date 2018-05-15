@@ -64,7 +64,8 @@ class TwitterGraph():
                 'text': tweet['text'],
                 'size':tweet['retweet_count'],
                 'retweet': 0,
-                'author': tweet['user']['name']
+                'author': tweet['user']['name'],
+                'time_created': tweet['created_at']
                 }
 
             if 'retweeted_status' in tweet.keys():
@@ -155,11 +156,6 @@ class TwitterGraph():
 
         with open('twitter_graph.json', 'w') as f:
             json.dump(json_object, f, indent=4, separators=(',',':'))
-
-
-        
-
-
 
         
 
