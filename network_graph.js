@@ -28,8 +28,21 @@ d3.json("twitter_graph.json", function(error, graph) {
     .enter().append("circle")
       .attr("r", function(d) {return Math.sqrt(d.size) + 5})
       .attr("fill", function(d) { return color(d.group); })
-    .on("click", function(d) {console.log(d.text);})
-      
+    
+      .on("mouseover", function(d) {
+         div
+         .transition()
+         .duration(200)
+         .style("opacity", 0.9)
+         .text(d.text)
+         .style("left", (d3.event.pageX) + "px")     
+         .style("top", (d3.event.pageY - 28) + "px")
+     }
+    ).on("mouseout", function(d) {       
+        div.transition()        
+            .duration(500)      
+            .style("opacity", 0)
+    })
       .call(d3.drag()
           .on("start", dragstarted)
           .on("drag", dragged)
@@ -49,8 +62,10 @@ d3.json("twitter_graph.json", function(error, graph) {
 
   simulation.force("link")
       .links(graph.links);
-
-
+    
+var div = d3.select("body").append("div")	
+      .attr("class", "tooltip")				
+      .style("opacity", 0);
 
   function ticked() {
     link
@@ -62,11 +77,15 @@ d3.json("twitter_graph.json", function(error, graph) {
     node
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
+        
 
 
 
   }
 });
+
+
+
 
 
 svg.call(d3.zoom()
@@ -94,3 +113,4 @@ function dragended(d) {
   d.fx = null;
   d.fy = null;
 }
+

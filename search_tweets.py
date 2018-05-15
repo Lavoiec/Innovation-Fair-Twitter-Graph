@@ -4,7 +4,7 @@ import json
 # The actual authentication
 from oauth_handler import auth
 
-N_TWEETS = 1000
+N_TWEETS = 100
 
 def setup_search_query(auth=auth):
     """
