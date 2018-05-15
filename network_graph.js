@@ -29,28 +29,31 @@ d3.json("twitter_graph.json", function(error, graph) {
       .attr("r", function(d) {return (Math.sqrt(d.size) + 8);})
       .attr("fill", function(d) { return color(d.retweet); })
     
-      .on("mouseover", function(d) {
-         div
-         .transition()
-         .duration(200)
-         .style("opacity", 0.9)
-         .style("left", (d3.event.pageX - 5) + "px")     
-         .style("top", (d3.event.pageY - 60) + "px");
+    .on("mouseover", function(d) {
+        div.transition()
+           .duration(200)
+           .style("opacity", 0.9)
+           .style("left", (d3.event.pageX - 5) + "px")     
+           .style("top", (d3.event.pageY - 80) + "px");
 
-         div.html("<b>Author:</b> " + d.author +  "</br>" + "<b>Text:</b> " + d.text);
-     }
-    ).on("mouseout", function(d) {       
+        div.html("<b>Author:</b> " + d.author +  "</br>" + "<b>Text:</b> " + d.text);
+        // Current node gets bigger when moused-over
+        d3.select(this).attr("r", function(d) {return 1.5*(Math.sqrt(d.size) + 8);});
+     })
+    .on("mouseout", function(d) {       
         div.transition()        
-            .duration(500)      
-            .style("opacity", 0)
+           .duration(500)      
+           .style("opacity", 0)
+           // Returning to the top left corner
+           .style("left",  "0px")     
+           .style("top", "0px");
+
+        d3.select(this).attr("r", function(d) {return (Math.sqrt(d.size) + 8);});
     })
-      .call(d3.drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended));
-
-
-
+    .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
 
 
   node.append("title")
@@ -78,10 +81,7 @@ var div = d3.select("body").append("div")
     node
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
-        
-
-
-
+    
   }
 });
 

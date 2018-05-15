@@ -94,34 +94,47 @@ class TwitterGraph():
         link_data = []
         for tweet in tweet_list:
             
+            def create_link_object(link_on):
+
+                if link_on in self.node_list:
+                    link_object = {
+                        'source': tweet['id'],
+                        'target': link_on,
+                        'value': 1
+                            }
+                    return link_object
+
+                else:
+                    return None
+
+
             try:
                 if method == "retweet":
                     # Retweeted_status gives the original tweet
                     # that the tweet is retweeting as its original object
                     # Therefore we dig a level deeper to get the id of the
                     # retweeted tweet
-                    if tweet['retweeted_status']['id'] in self.node_list:
-
-                        link_object = {
-                            'source': tweet['id'],
-                            'target': tweet['retweeted_status']['id'],
-                            'value': 1
-                            }
-
+                    link_object = create_link_object(tweet['retweeted_status']['id'])
+                    if link_object:
                         link_data.append(link_object)
 
                 elif method == "reply":
                     # The id of the tweet it replies to is stored as a parameter
                     # Easy to fetch.
-                    if tweet['in_reply_to_status_id'] in self.node_list:
-
-                        link_object = {
-                            'source': tweet['id'],
-                            'target': tweet['in_reply_to_status_id'],
-                            'value': 1
-                        }
-
+                    link_object = create_link_object(tweet['in_reply_to_status_id'] )
+                    if link_object:
                         link_data.append(link_object)
+
+                elif method == "both":
+
+                    link_object = create_link_object(tweet['retweeted_status']['id'])
+                    if link_object:
+                        link_data.append(link_object)
+
+                    link_object = create_link_object(tweet['in_reply_to_status_id'] )
+                    if link_object:
+                        link_data.append(link_object)
+
 
             except KeyError:
                 pass
@@ -151,12 +164,8 @@ class TwitterGraph():
         
 
 tweets = import_tweets()
-
 graph = TwitterGraph(tweets)
-
 graph.get_nodes()
-
-graph.get_links(method="retweet")
-
+graph.get_links(method="both")
 graph.export_to_json()
 

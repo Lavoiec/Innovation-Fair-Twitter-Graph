@@ -4,7 +4,8 @@ import json
 # The actual authentication
 from oauth_handler import auth
 
-N_TWEETS = 300
+N_TWEETS = 500
+SEARCH_QUERY = "#GC2020"
 
 def setup_search_query(auth=auth):
     """
@@ -81,7 +82,7 @@ def get_parent_of_replies(tweet_list, append=True, auth=auth):
 
 def search_and_store():
     api_search = setup_search_query()
-    tweets = search_twitter(api_search, "#GC2020")
+    tweets = search_twitter(api_search, SEARCH_QUERY)
 
     return tweets
     
