@@ -11,11 +11,14 @@ Nodes {
     id: Tweet id
     text: Tweet text
     size: Weighted Average of Favourites, Retweets and Quotes
+    retweet: 1 or 0. Is retweeted
+    author: Username of author of tweet
 }
 
 Links: {
     Source: Tweet id
     Target: id of Tweet that it retweeted
+    value: 1
 }
 
 """
@@ -59,8 +62,14 @@ class TwitterGraph():
             node_object = {
                 'id': tweet['id'],
                 'text': tweet['text'],
-                'size':tweet['retweet_count']
-                  }
+                'size':tweet['retweet_count'],
+                'retweet': 0,
+                'author': tweet['user']['name']
+                }
+
+            if 'retweeted_status' in tweet.keys():
+                # Adds if a retweet or not
+                node_object['retweet'] = 1
             # If tweet is unique
             if node_object not in node_data:
                 node_data.append(node_object)

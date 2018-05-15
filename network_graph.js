@@ -26,17 +26,18 @@ d3.json("twitter_graph.json", function(error, graph) {
     .selectAll("circle")
     .data(graph.nodes)
     .enter().append("circle")
-      .attr("r", function(d) {return Math.sqrt(d.size) + 5})
-      .attr("fill", function(d) { return color(d.group); })
+      .attr("r", function(d) {return (Math.sqrt(d.size) + 8);})
+      .attr("fill", function(d) { return color(d.retweet); })
     
       .on("mouseover", function(d) {
          div
          .transition()
          .duration(200)
          .style("opacity", 0.9)
-         .text(d.text)
-         .style("left", (d3.event.pageX) + "px")     
-         .style("top", (d3.event.pageY - 28) + "px")
+         .style("left", (d3.event.pageX - 5) + "px")     
+         .style("top", (d3.event.pageY - 60) + "px");
+
+         div.html("<b>Author:</b> " + d.author +  "</br>" + "<b>Text:</b> " + d.text);
      }
     ).on("mouseout", function(d) {       
         div.transition()        
